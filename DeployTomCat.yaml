@@ -1,0 +1,112 @@
+kind: "Namespace"
+apiVersion: "v1"
+metadata:
+  name: "pega74"
+  labels: 
+    name: "pega74"
+---
+apiVersion: "apps/v1beta2"
+kind: "StatefulSet"
+metadata:
+  name: "tomcat-pega74-jre8-frontend"
+  namespace: "pega74"
+  labels:
+    app: "tomcat-pega74-jre8-frontend"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "tomcat-pega74-jre8-frontend"
+  serviceName: "tomcat-pega74-jre8-frontend"
+  template:
+    metadata:
+      labels:
+        app: "tomcat-pega74-jre8-frontend"
+    spec:
+      containers:
+      - image: hspegacr.azurecr.io/pega-azure-sandbox-ls:latest
+        name: "tomcat-pega"
+        securityContext:
+            runAsUser: 0
+        ports:
+        - containerPort: 8080
+          name: "tomcat-pega"
+        volumeMounts:
+            - mountPath: "/usr/data/"
+              name: "tomcat-vol"
+      volumes:
+          - name: "tomcat-vol"
+            persistentVolumeClaim:
+              claimName: "tomcat-pvc"        
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "tomcat-service"
+  namespace: "pega74"
+  labels:
+    app: "tomcat-pega74-jre8-frontend"
+spec:
+  ports:
+  - name: "80-to-8080-tcp"
+    protocol: "TCP"
+    port: 80
+    targetPort: 8080
+  - name: elastic
+    port: 9300
+    targetPort: 9300
+  - name: elastic1
+    port: 9301
+    targetPort: 9301
+  - name: elastic2
+    port: 9302
+    targetPort: 9302
+  selector:
+    app: "tomcat-pega74-jre8-frontend"
+  type: "LoadBalancer"
+  loadBalancerIP: ""
+  sessionAffinity: "ClientIP"
+---
+apiVersion: "autoscaling/v1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "tomcat-hpa"
+  namespace: "pega74"
+  labels:
+    app: "tomcat-pega74-jre8-frontend"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "tomcat"
+    apiVersion: "apps/v1beta1"
+  minReplicas: 1
+  maxReplicas: 12
+  targetCPUUtilizationPercentage: 80
+---
+kind: "StorageClass"
+apiVersion: "storage.k8s.io/v1"
+metadata:
+  name: "faster"
+  namespace: "pega74"
+provisioner: "kubernetes.io/azure-disk"
+parameters:
+  skuName: "Standard_LRS"
+  kind: "Managed"
+  cachingmode: "None"
+---  
+apiVersion: v1
+kind: "PersistentVolumeClaim"
+metadata:
+  name: "tomcat-pvc"
+  namespace: "pega74"
+  labels:
+    name: "tomcat-pega74-jre8-frontend"
+  annotations:
+    volume.alpha.kubernetes.io/storage-class: "faster"
+spec:
+  storageClassName: "faster"
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: "100Gi"
+---
