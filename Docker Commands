@@ -1,8 +1,13 @@
+
+#Push
 docker tag pega-azure-sandbox-ls:latest hspegacr.azurecr.io/pega-azure-sandbox-ls:latest
 docker push hspegacr.azurecr.io/pega-azure-sandbox-ls:latest
+#Deploy
 kubectl apply -f D:\Github\pega-azure-sandbox-ls\DeployTomCat.yaml
 
+#Local Authentication to azure
 az aks get-credentials --resource-group HSLeeTest --name hs-sb-1
+
 kubectl create -f D:\Github\pega-azure-sandbox-ls\LogReaderRBAC.yaml
 
 az container logs --resource-group HSLeeTest --name 70296400-23e8-11e9-9780-c689976d1b89/tomcat-pega
@@ -20,3 +25,5 @@ ACR_ID=$(az acr show --name $ACR_NAME --resource-group $ACR_RESOURCE_GROUP --que
 
 # Create role assignment
 az role assignment create --assignee $CLIENT_ID --role acrpull --scope $ACR_ID
+
+kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard

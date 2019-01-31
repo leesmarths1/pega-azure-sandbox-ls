@@ -38,6 +38,6 @@
 	<env name="database/databases/PegaDATA/password" value="a_password" />
 	-->
 
-<env name=”indexing/distributed/transport/port” value=”9300-9302” />
+<env name="indexing/distributed/transport/port" value="9300-9302" />
 <!--<env name=”indexing/distributed/transport/host” value=”” />-->
 </pegarules>
