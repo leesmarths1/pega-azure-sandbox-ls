@@ -1,4 +1,20 @@
 
+
+#Push
+docker tag pega-azure-sandbox-ls:latest leessandboxakscr.azurecr.io/pega-azure-sandbox-ls:latest
+docker push leessandboxakscr.azurecr.io/pega-azure-sandbox-ls:latest
+#Deploy
+kubectl apply -f D:\Github\pega-azure-sandbox-ls\DeployTomCat.yaml
+
+az aks get-credentials --resource-group lees-sandboxenv-uks-rg --name lees-sandbox-pega74-uks-aks --overwrite-existing
+
+
+
+Server=tcp:ls-snadbox-pega74-uks-sqlsvr.database.windows.net,1433;Initial Catalog=pega-wmkt;Persist Security Info=False;User ID={your_username};Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
+kubectl create -f D:\Github\pega-azure-sandbox-ls\LogReaderRBAC.yaml
+
+az aks browse --resource-group lees-sandboxenv-uks-rg --name lees-sandbox-pega74-uks-aks
+
 #Push
 docker tag pega-azure-sandbox-ls:latest hspegacr.azurecr.io/pega-azure-sandbox-ls:latest
 docker push hspegacr.azurecr.io/pega-azure-sandbox-ls:latest
@@ -6,15 +22,18 @@ docker push hspegacr.azurecr.io/pega-azure-sandbox-ls:latest
 kubectl apply -f D:\Github\pega-azure-sandbox-ls\DeployTomCat.yaml
 
 #Local Authentication to azure
-az aks get-credentials --resource-group HSLeeTest --name hs-sb-1
+az aks get-credentials --resource-group ls-sandboxenv-uks-rg --name ls-sandbox-pega74-uks-aks --overwrite-existing
 
 kubectl create -f D:\Github\pega-azure-sandbox-ls\LogReaderRBAC.yaml
 
-az container logs --resource-group HSLeeTest --name 70296400-23e8-11e9-9780-c689976d1b89/tomcat-pega
+#remove kube config when Aks wont authenticate
+rm ~/.kube/config
 
-AKS_RESOURCE_GROUP=HSLeeTest
-AKS_CLUSTER_NAME=hs-sb-1
-ACR_RESOURCE_GROUP=HSLeeTest
+az container logs --resource-group ls-sandboxenv-uks-rg --name a77e353d-4fc7-11e9-9c8c-9e86d3971e7c/tomcat-pega
+
+AKS_RESOURCE_GROUP=ls-sandboxenv-uks-rg
+AKS_CLUSTER_NAME=ls-sandbox-pega74-uks-aks
+ACR_RESOURCE_GROUP=ls-sandboxenv-uks-rg
 ACR_NAME=hspegacr
 
 # Get the id of the service principal configured for AKS
