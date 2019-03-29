@@ -24,7 +24,7 @@ spec:
         app: "tomcat-pega74-jre8-frontend"
     spec:
       containers:
-      - image: leessandboxakscr.azurecr.io/pega-azure-sandbox-ls:latest
+      - image: lssandboxakscr.azurecr.io/pega-azure-sandbox-ls:latest
         name: "tomcat-pega"
         securityContext:
             runAsUser: 0

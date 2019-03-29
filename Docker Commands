@@ -1,14 +1,16 @@
 
 
 #Push
-docker tag pega-azure-sandbox-ls:latest leessandboxakscr.azurecr.io/pega-azure-sandbox-ls:latest
-docker push leessandboxakscr.azurecr.io/pega-azure-sandbox-ls:latest
+docker tag pega-azure-sandbox-ls:latest lssandboxakscr.azurecr.io/pega-azure-sandbox-ls:latest
+docker push lssandboxakscr.azurecr.io/pega-azure-sandbox-ls:latest
 #Deploy
 kubectl apply -f D:\Github\pega-azure-sandbox-ls\DeployTomCat.yaml
 
 az aks get-credentials --resource-group lees-sandboxenv-uks-rg --name lees-sandbox-pega74-uks-aks --overwrite-existing
 
-
+az aks get-credentials --resource-group ls-sandboxenv-uks-rg --name aks-cluster --overwrite-existing
+aks-cluster
+az aks browse --resource-group ls-sandboxenv-uks-rg --name aks-cluster
 
 Server=tcp:ls-snadbox-pega74-uks-sqlsvr.database.windows.net,1433;Initial Catalog=pega-wmkt;Persist Security Info=False;User ID={your_username};Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
 kubectl create -f D:\Github\pega-azure-sandbox-ls\LogReaderRBAC.yaml
