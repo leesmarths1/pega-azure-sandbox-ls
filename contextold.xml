@@ -38,7 +38,7 @@
     <Resource name="jdbc/PegaRULES" auth="Container" type="javax.sql.DataSource" driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver" url="jdbc:sqlserver://ls-snadbox-pega74-uks-sqlsvr.database.windows.net:1433; databaseName=pega-wmkt; selectMethod=cursor;sendStringParametersAsUnicode=false" username="leesmart@ls-snadbox-pega74-uks-sqlsvr" password="Homeserve123£" maxActive="100" maxIdle="30" maxWait="10000"/>
     <Environment name="prconfig/database/databases/PegaRULES/defaultSchema" value="PegaRULES" type="java.lang.String"/>
     <Environment name="prconfig/database/databases/PegaDATA/defaultSchema" value="PegaDATA" type="java.lang.String"/>
-
+    
   <!--   <Environment name="prconfig/database/databases/CustomerData/defaultSchema" value="customer-data-schema" type="java.lang.String"/> -->
     <Environment name="url/initialization/explicittempdir" value="path" type="java.lang.String"/>
 </Context>
